@@ -117,8 +117,8 @@ def x_b3_traceid() -> str:
     return secrets.token_hex(8)
 
 
-def search_id():
-    e = int(time.time() * 1000) << 64
+def search_id(timestamp: int) -> str:
+    e = timestamp << 64
     t = int(random.uniform(0, 2147483646))
     return base36encode((e + t))
 
