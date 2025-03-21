@@ -11,6 +11,8 @@
 
 ## Install
 
+Make sure you have a [rednote](https://www.xiaohongshu.com) social media account.
+
 Create and activate a Python 3.12 virtual environment. Set the current directory to the program's root directory. Run the following command.
 
 ```
@@ -49,8 +51,17 @@ Create a JSON file `config.json` in the program's root directory. Fill in API ke
 
 ## Usage
 
-To get the cookies file,
+Run the following command.
 
-1. Visit https://www.xiaohongshu.com/explore and export the cookies by J2TEAM cookies.
-2. Select this cookies file when the program requires.
+```
+python app.py
+```
+
+When the program hints that `rednote` cookies are expired: 
+
+- Visit `rednote` and log in your account
+- Export cookies by J2TEAMS extension (a file will be downloaded)
+- Upload the file in this program's hint page
+
+*You can replace cookies (therefore can switch between `rednote` accounts) by click "replace cookies" at left-bottom corner of main page. Existed conversations will not be affected by replacing cookies. Therefore, the conversations, which is created long time ago, cannot continue visiting data fetching tools.*
 
