@@ -1,8 +1,7 @@
-import json
 import os
 import time
+
 import pandas as pd
-from winapi import select_file
 
 
 def dump_cookies(cookies_dict, output_path):
