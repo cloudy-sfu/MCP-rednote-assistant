@@ -64,17 +64,6 @@
                     </li>
                 {% endfor %}
             </ul>
-            <ul class="list-unstyled ps-0 mb-0">
-                <li class="border-top my-3"></li>
-                <li class="text-muted">
-                    <a href="/cookies" class="not-obvious">Replace cookies</a>
-                </li>
-                <li class="text-muted">
-                    Powered by
-                    <a href="https://github.com/cloudy-sfu/HTML-book" target="_blank"
-                       class="not-obvious">HTML Book</a>.
-                </li>
-            </ul>
         </div>
         <!-- End of the sidebar -->
         <div class="col-md-9 p-0 d-flex flex-column" style="height: 100vh;">
@@ -106,11 +95,32 @@
                     <p class="lead fw-bold">Introduction</p>
                     <p>This is the artificial intelligence agent for social media
                         <a href="https://www.xiaohongshu.com" target="_blank">rednote</a>.</p>
+                    <table class="table">
+                        <thead><tr>
+                            <th>Function</th><th>Description</th>
+                        </tr></thead>
+                        <tbody>
+                        <tr>
+                            <td class="text-nowrap"><a href="/cookies">Replace cookies</a></td>
+                            <td>Solve expired cookies or switch <code>rednote</code> account.</td>
+                        </tr>
+                        <tr>
+                            <td class="text-nowrap"><a href="/archive">Save conversations</a></td>
+                            <td>Save a snapshot of conversations, therefore chat history of these
+                                conversations can be recovered next time the program starts.
+                                When recovered, chat history is available, but you cannot continue
+                                the conversation. <br>
+                                <b>Unsaved conversations will be lost when this program exits.</b>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             {% else %}
                 <div class="alert flex-fill" style="overflow-y: auto;" id="messages-list">
                     {{ messages | safe }}
                 </div>
+                {% if active %}
                 <div class="alert mb-0">
                     <form class="form" action="/conv/send" method="post" id="conv-send">
                         <label for="user-message">How can I help?</label>
@@ -128,6 +138,7 @@
                         </div>
                     </form>
                 </div>
+                {% endif %}
             {% endif %}
         </div>
     </div>

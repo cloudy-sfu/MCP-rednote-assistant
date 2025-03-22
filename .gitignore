@@ -163,3 +163,4 @@ raw/
 .run/
 config.json
 log
+main.bat

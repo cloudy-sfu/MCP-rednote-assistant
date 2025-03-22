@@ -5,8 +5,10 @@ import socket
 import sys
 import threading
 import webbrowser
+from dataclasses import dataclass
 from logging.handlers import RotatingFileHandler
 
+import pandas as pd
 from bs4 import BeautifulSoup
 from flask import Flask, render_template, redirect, request, jsonify
 from markdown import markdown
@@ -27,11 +29,30 @@ app = Flask(__name__)
 app.logger.propagate = False
 werkzeug_logger = logging.getLogger('werkzeug')
 werkzeug_logger.propagate = False
+os.makedirs("raw", exist_ok=True)
 cookies_path = "raw/cookies.csv"
-os.makedirs(os.path.dirname(cookies_path), exist_ok=True)
 cookies = {}
 cookies_lock = threading.Lock()
-conversations = {}  # id: instance
+
+
+@dataclass
+class ArchivedConversation:
+    title: str
+    messages: list[dict]
+
+
+def load_archived_conversations():
+    if os.path.isfile("raw/conversations"):
+        archived_convs = pd.read_pickle("raw/conversations")
+        return {
+            i+1: conv
+            for i, conv in enumerate(archived_convs)
+        }
+    else:
+        return {}
+
+
+conversations = load_archived_conversations()  # id: instance
 conversations_lock = threading.Lock()
 
 
@@ -119,6 +140,7 @@ def view_conversation(conv_id: int):
         home_page=False,
         messages=messages_html,
         conv_id=conv_id,
+        active=isinstance(conv, Conversation)
     )
 
 
@@ -249,6 +271,17 @@ def find_available_port(start_port: int, tries: int = 100):
             pass
     raise Exception(f"Tried {tries} times, no available port from {start_port} to "
                     f"{start_port + tries}.")
+
+
+@app.route('/archive')
+def archive_all():
+    archived_convs = []
+    with conversations_lock:
+        for conv in conversations.values():
+            archived_conv = ArchivedConversation(title=conv.title, messages=conv.messages)
+            archived_convs.append(archived_conv)
+    pd.to_pickle(archived_convs, "raw/conversations")
+    return redirect("/")
 
 
 if __name__ == '__main__':
