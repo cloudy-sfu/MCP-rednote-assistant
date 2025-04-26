@@ -1,5 +1,5 @@
 {% if message.role == 'assistant' %}
-    <div message_id="{{ message_id }}" style="word-break: break-all">
+    <div class="bd-callout" message_id="{{ message_id }}" style="word-break: break-all">
         <span class="fw-bold">Agent</span>
         {% if message.content %}
             {{ message.content | render_markdown | safe }}
@@ -7,22 +7,22 @@
             <p style="word-break: break-all">
                 {% for tool_call in message.tool_calls %}
                     <span class="text-muted">Call Python function
-                        <code>{{ tool_call | render_tool_call_token }}</code>
+                        <code style="color: inherit">{{ tool_call | render_tool_call_token }}</code>
                     </span><br>
                 {% endfor %}
             </p>
         {% endif %}
     </div>
 {% elif message.role == 'user' %}
-    <div class="text-end" message_id="{{ message_id }}" style="word-break: break-all">
+    <div class="bd-callout bd-callout-primary" message_id="{{ message_id }}" style="word-break: break-all">
         <span class="fw-bold">User</span>
         {{ message.content | render_markdown | safe }}
     </div>
 {% elif message.role == 'tool' %}
-    <div message_id="{{ message_id }}">
+    <div class="bd-callout" message_id="{{ message_id }}">
         <span class="fw-bold">Agent</span>
         <p class="text-muted" style="word-break: break-all">
-            Function <code>{{ message | render_tool_response_token }}</code> has responded.
+            Function <code style="color: inherit">{{ message | render_tool_response_token }}</code> has responded.
         </p>
     </div>
 {% endif %}

@@ -14,15 +14,21 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <!-- Left-side bar style -->
     <link rel="stylesheet" href="{{ url_for('static', filename='left_sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='callout.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-3 p-3 d-flex flex-column" style="height: 100vh;">
-            <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
-                <span class="fs-5 fw-semibold" id="book-title">AI agent <code>rednote</code></span>
-            </a>
-            <ul class="navbar-nav flex-grow-1" style="overflow-y: auto;" id="articles-list">
+            <div class="d-flex align-items-center pb-3 mb-3 border-bottom justify-content-between">
+                <a href="/" class="fs-5 fw-semibold link-dark text-decoration-none"
+                   id="book-title">
+                    <span>AI agent <code>rednote</code></span>
+                </a>
+            </div>
+            <ul class="navbar-nav flex-grow-1 collapse show" style="overflow-y: auto;"
+                id="articles-list">
                 <li class="nav-item mb-2"
                         style="line-height: calc(var(--bs-body-line-height));">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem"
@@ -57,9 +63,7 @@
                     <li class="nav-link d-flex justify-content-between" conv_id="{{ conv.id }}">
                         <a href="/conv/{{ conv.id }}" class="not-obvious flex-fill">{{ conv.title }}</a>
                         <a href="/conv/delete/{{ conv.id }}" class="me-4 not-obvious">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-                            </svg>
+                            <i class="bi bi-x-lg"></i>
                         </a>
                     </li>
                 {% endfor %}
@@ -130,9 +134,7 @@
                                       class="form-control flex-fill" rows="4"></textarea>
                             <div class="justify-content-center d-flex flex-column">
                                 <button type="submit" class="btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                                        <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
-                                    </svg>
+                                    <i class="bi bi-send"></i>
                                 </button>
                             </div>
                         </div>
