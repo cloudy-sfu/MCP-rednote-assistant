@@ -69,19 +69,22 @@
                 {% endfor %}
             </ul>
         </div>
+        <div class="col-md-1"></div>
         <!-- End of the sidebar -->
-        <div class="col-md-9 p-0 d-flex flex-column" style="height: 100vh;">
+        <div class="col-md-7 p-0 d-flex flex-column" style="height: 100vh;">
             {% if home_page %}
                 <div class="alert">
+                    <h1>AI agent <code>rednote</code></h1>
+                    <p>This is the artificial intelligence agent for social media
+                        <a href="https://www.xiaohongshu.com" target="_blank">rednote</a>.</p>
                     <p class="lead fw-bold">Checklist</p>
                     <p>If you didn't fulfill the checklist, please refer to <code>README.md</code>
                     and follow the instructions in "Install" section.</p>
                     <ul>
                         <li>I have a <code>rednote</code> account.</li>
                         <li>
-                            I have deployed a GPT model in
-                            <a href="https://learn.microsoft.com/en-us/azure/ai-services/openai/" target="_blank">Azure OpenAI Service</a>,
-                            for example <code>gpt-4o</code>.
+                            I have deployed a <code>gpt-4o</code> GPT model in
+                            <a href="https://learn.microsoft.com/en-us/azure/ai-services/openai/" target="_blank">Azure OpenAI Service</a>.
                         </li>
                         <li>
                             I have created <code>config.json</code> and recorded API key, API version,
@@ -96,9 +99,7 @@
                             function to process the uploaded cookies file.
                         </li>
                     </ul>
-                    <p class="lead fw-bold">Introduction</p>
-                    <p>This is the artificial intelligence agent for social media
-                        <a href="https://www.xiaohongshu.com" target="_blank">rednote</a>.</p>
+                    <p class="lead fw-bold">Shortcuts</p>
                     <table class="table">
                         <thead><tr>
                             <th>Function</th><th>Description</th>
@@ -127,11 +128,10 @@
                 {% if active %}
                 <div class="alert mb-0">
                     <form class="form" action="/conv/send" method="post" id="conv-send">
-                        <label for="user-message">How can I help?</label>
                         <input type="hidden" name="conv_id" value="{{ conv_id }}">
                         <div class="d-flex gap-2">
                             <textarea id="user-message" required name="user_message"
-                                      class="form-control flex-fill" rows="4"></textarea>
+                                      class="form-control flex-fill bg-light" rows="4"></textarea>
                             <div class="justify-content-center d-flex flex-column">
                                 <button type="submit" class="btn">
                                     <i class="bi bi-send"></i>

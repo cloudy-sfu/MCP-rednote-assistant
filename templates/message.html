@@ -1,28 +1,39 @@
-{% if message.role == 'assistant' %}
-    <div class="bd-callout" message_id="{{ message_id }}" style="word-break: break-all">
+{% if message.role == 'assistant' and message.content %}
+    <div message_id="{{ message_id }}" style="word-break: break-all">
         <span class="fw-bold">Agent</span>
-        {% if message.content %}
-            {{ message.content | render_markdown | safe }}
-        {% elif message.tool_calls %}
-            <p style="word-break: break-all">
+        {{ message.content | render_markdown | safe }}
+    </div>
+{% elif message.role == 'assistant' and message.tool_calls %}
+    <div class="text-muted" message_id="{{ message_id }}">
+        <details>
+            <summary>Investigate</summary>
+            <div style="word-break: break-all">
                 {% for tool_call in message.tool_calls %}
-                    <span class="text-muted">Call Python function
-                        <code style="color: inherit">{{ tool_call | render_tool_call_token }}</code>
-                    </span><br>
+                    Call Python function
+                    <code style="color: inherit">
+                        {{ tool_call | render_tool_call_token }}
+                    </code>
+                    <br>
                 {% endfor %}
-            </p>
-        {% endif %}
+            </div>
+        </details>
     </div>
 {% elif message.role == 'user' %}
-    <div class="bd-callout bd-callout-primary" message_id="{{ message_id }}" style="word-break: break-all">
+    <div class="bd-callout text-end"
+         message_id="{{ message_id }}" style="word-break: break-all">
         <span class="fw-bold">User</span>
         {{ message.content | render_markdown | safe }}
     </div>
 {% elif message.role == 'tool' %}
-    <div class="bd-callout" message_id="{{ message_id }}">
-        <span class="fw-bold">Agent</span>
-        <p class="text-muted" style="word-break: break-all">
-            Function <code style="color: inherit">{{ message | render_tool_response_token }}</code> has responded.
-        </p>
+    <div class="text-muted" message_id="{{ message_id }}">
+        <details>
+            <summary>Collect results</summary>
+            <div style="word-break: break-all">
+                Function
+                <code style="color: inherit">
+                    {{ message | render_tool_response_token }}
+                </code> has responded.
+            </div>
+        </details>
     </div>
 {% endif %}
