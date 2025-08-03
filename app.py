@@ -63,9 +63,9 @@ def main():  # put application's code here
         for id_, conv in conversations.items()
     ]
     return render_template(
-        'main.html',
+        'chat.html',
         conversations=conv_display_list,
-        home_page=True,
+        active=True,
     )
 
 
@@ -135,7 +135,7 @@ def view_conversation(conv_id: int):
         return redirect('/')
     messages_html = render_message_list(conv.messages)
     return render_template(
-        'main.html',
+        'chat.html',
         conversations=conv_display_list,
         home_page=False,
         messages=messages_html,
@@ -180,8 +180,15 @@ def process_user_message():
     conv_id = request.form.get('conv_id', type=int)
     user_message = request.form.get('user_message', type=str)
     if conv_id is None:
-        return jsonify()
-    conv = conversations.get(conv_id)
+        conv = Conversation(cookies, max_func_call_rounds)
+        with conversations_lock:
+            if conversations:
+                conv_id = max(conversations.keys()) + 1
+            else:
+                conv_id = 1
+            conversations[conv_id] = conv
+    else:
+        conv = conversations.get(conv_id)
     if not isinstance(conv, Conversation):
         return jsonify()
     conv.busy = True

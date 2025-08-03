@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Bootstrap -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK"
+            crossorigin="anonymous">
+    </script>
+    <!-- Bootstrap icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+    <title>AI Agent Messages</title>
+</head>
+<body style="height: 100vh;">
+    <div class="navbar navbar-expand-md" id="header">
+        <div class="container-md">
+            <a href="/" class="navbar-brand">AI agent <code>rednote</code></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse" aria-controls="navbarCollapse"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item"><a class="nav-link" href="/settings">Settings</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container-md">
+        <div class="row" id="main">
+            <div class="col-md-4 d-none d-md-block" style="overflow-y: auto;" id="main-left">
+                <div class="list-group list-group-flush border-bottom scrollarea">
+                <div class="list-group-item py-3 d-block d-md-none">
+                    <a href="" style="text-decoration: none; color: black"
+                       onclick="toggle_conv_list()" type="button"
+                       class="d-flex gap-2 fw-bold">
+                        <i class="bi bi-list-task"></i>
+                        <span>Collapse conversation list</span>
+                    </a>
+                </div>
+                {% for conv in conversations | reverse %}
+                    <div class="list-group-item py-3">
+                        <div class="d-flex w-100 align-items-center justify-content-between">
+                            <a href="/conv/{{ conv.id }}" style="text-decoration: none; color: black;">
+                                <div class="mb-1">
+                                    {{ conv.title }}
+                                </div>
+                            </a>
+                            <a href="/conv/delete/{{ conv.id }}" style="text-decoration: none; color: black;">
+                                <i class="bi bi-x-lg mx-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div style="overflow-y: auto;" id="main-right">
+                    <div class="mx-3 rounded" id="messages-list">
+                        {{ messages | safe }}
+                    </div>
+                </div>
+                <div id="main-right-input">
+                    {% if active %}
+                    <form class="form" action="/conv/send" method="post" id="conv-send">
+                        <input type="hidden" name="conv_id" value="{{ conv_id }}">
+                        <div class="input-group">
+                            <button class="btn btn-dark rounded d-block d-md-none"
+                                    style="align-self: flex-end"
+                                    onclick="toggle_conv_list()" type="button">
+                                <i class="bi bi-list-task"></i>
+                            </button>
+                            <textarea id="user-message" required name="user_message"
+                                      class="form-control rounded"
+                                      style="border-color: black; border-width: 1px; overflow-block: hidden; max-height: 40vh;"
+                                      rows="1"></textarea>
+                            <button class="btn btn-dark rounded"
+                                    type="submit" style="align-self: flex-end">
+                                <i class="bi bi-send"></i>
+                            </button>
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row mb-0" id="footer">
+            <div class="col-12 my-2">
+                <span>&copy; cloudy-sfu, 2025.</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    // set #main.height = 100vh - #header.height
+    const header_height = document.getElementById("header").offsetHeight;
+    const footer_height = document.getElementById("footer").offsetHeight;
+    const main_height = window.innerHeight - header_height - footer_height;
+    const conv_list = document.getElementById("main-left");
+    conv_list.style.height = `${main_height}px`;
+    // set chat history height as main height minus text input area's height
+    const main_right_input = document.getElementById("main-right-input");
+    let main_right_input_height = main_right_input.offsetHeight;
+    let main_right_height = main_height - main_right_input_height;
+    const main_right = document.getElementById("main-right");
+    main_right.style.height = `${main_right_height}px`;
+
+    {% if active %}
+    // Auto-resize text input area's height
+    const user_message = document.getElementById("user-message");
+    const resize_main_right = () => {
+        // Reset height to 'auto' to allow shrinking
+        user_message.style.height = 'auto';
+        // Set height to the scroll height to fit the content
+        user_message.style.height = `${user_message.scrollHeight}px`;
+        // Recalculate main content area height
+        main_right_input_height = main_right_input.offsetHeight;
+        main_right_height = main_height - main_right_input_height;
+        main_right.style.height = `${main_right_height}px`;
+    };
+    user_message.addEventListener('input', resize_main_right);
+    const resize_main_right_initialized = () => {
+        main_right_input_height = main_right_input.offsetHeight;
+        main_right_height = main_height - main_right_input_height;
+        main_right.style.height = `${main_right_height}px`;
+    }
+    const user_message_resize_observer = new ResizeObserver(resize_main_right_initialized);
+    user_message_resize_observer.observe(user_message);
+
+    // Shortcut: Ctrl+Enter to submit user message.
+    user_message.addEventListener('keyup', (e) => {
+        if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('conv-send').submit();
+        }
+    });
+    {% endif %}
+
+    // Collapse & expand chat list
+    const toggle_conv_list = function () {
+        if (conv_list.classList.contains("d-none")) {
+            conv_list.classList.remove("d-none");
+        } else {
+            conv_list.classList.add("d-none");
+        }
+    }
+
+</script>
+
+</html>
