@@ -134,7 +134,8 @@
 
     // Auto-resize text input area's height
     const user_message = document.getElementById("user-message");
-    const resize_main_right = () => {
+    
+    function resize_main_right() {
         // Reset height to 'auto' to allow shrinking
         user_message.style.height = 'auto';
         // Set height to the scroll height to fit the content
@@ -143,7 +144,8 @@
         main_right_input_height = main_right_input.offsetHeight;
         main_right_height = main_height - main_right_input_height;
         main_right.style.height = `${main_right_height}px`;
-    };
+    }
+
     user_message.addEventListener('input', resize_main_right);
     const resize_main_right_initialized = () => {
         main_right_input_height = main_right_input.offsetHeight;
