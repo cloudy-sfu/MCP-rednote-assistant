@@ -177,11 +177,13 @@ def process_user_message():
     user_message = request.form.get('user_message', type=str)
     error_message = []
     if conv_id is None:
-        return jsonify()
+        error_message.append("Conversation doesn't exist.")
+        return jsonify({"error": error_message})
     else:
         conv = conversations.get(conv_id)
     if not isinstance(conv, Conversation):
-        return jsonify()
+        error_message.append("Conversation is archived.")
+        return jsonify({"error": error_message})
     conv.busy = True
     if not conv.title:
         error_1 = conv.generate_title(user_message)
@@ -203,13 +205,12 @@ def update_message():
     conv_id = request.form.get('conv_id', type=int)
     start_id = request.form.get('start_id', type=int)
     if conv_id is None:
-        return jsonify({"error": "Conversation doesn't exist.", "busy": False})
+        return jsonify({"busy": False})
     conv = conversations.get(conv_id)
     if not isinstance(conv, Conversation):
-        return jsonify({"error": "Conversation is archived.", "busy": False})
+        return jsonify({"busy": False})
     messages_html = render_message_list(conv.messages[start_id:], start_id=start_id)
-    response = {"messages": messages_html, "title": conv.title, "busy": conv.busy}
-    return jsonify(response)
+    return jsonify({"messages": messages_html, "title": conv.title, "busy": conv.busy})
 
 
 @app.template_filter('render_markdown')
@@ -289,6 +290,7 @@ def archive():
 @app.route('/about')
 def view_check_list():
     return render_template("checklist.html")
+
 
 @app.route('/config')
 def view_config():
