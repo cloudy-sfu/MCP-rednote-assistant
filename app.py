@@ -1,6 +1,4 @@
-import json
 import logging
-import os
 import socket
 import sys
 import threading
@@ -14,9 +12,8 @@ from flask import Flask, render_template, redirect, request, jsonify
 from markdown import markdown
 
 import auth
+from config import *
 from openai_agent import Conversation, get_model_list
-from config import config
-from contextlib import suppress
 
 logging.basicConfig(
     format="%(levelname)s | %(asctime)s | %(message)s",
@@ -31,10 +28,13 @@ app = Flask(__name__)
 app.logger.propagate = False
 werkzeug_logger = logging.getLogger('werkzeug')
 werkzeug_logger.propagate = False
+# Load cookies
 os.makedirs("raw", exist_ok=True)
 cookies_path = "raw/cookies.csv"
 cookies = {}
 cookies_lock = threading.Lock()
+# Load config
+config_ = Config()
 
 
 @dataclass
@@ -100,7 +100,10 @@ def add_conversation():
             cookies = auth.load_cookies(cookies_path)
     else:
         return redirect('/cookies')
-    conv = Conversation(cookies)
+    try:
+        conv = Conversation(cookies, config_)
+    except Exception as e:
+        return jsonify({'error': e.__str__()})
     with conversations_lock:
         if conversations:
             conv_id = max(conversations.keys()) + 1
@@ -296,19 +299,19 @@ def view_check_list():
 def view_config():
     return render_template(
         "config.html",
-        config=config,
-        openai_model_list=get_model_list(),
+        config=config_,
+        openai_model_list=get_model_list(
+            api_key=config_['openai_api_key'],
+            selected_model=config_['openai_model']
+        ),
     )
 
 
 @app.route('/config/update', methods=['POST'])
 def update_config():
-    config_received = request.form.to_dict()
-    with (suppress(ValueError)):
-        config_received['max_func_call_rounds'] = \
-        int(config_received.get('max_func_call_rounds'))
-    config.update(config_received)
-    config.save()
+    config_ = validate(request.form.to_dict())
+    config_.update(config_)
+    config_.save()
     return redirect('/')
 
 

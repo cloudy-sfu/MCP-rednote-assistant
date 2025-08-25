@@ -89,6 +89,10 @@ async function add_conversation() {
         throw Error(error_msg)
     } else if (response.redirected) {
         location.href = response.url;  // Redirected to cookies page.
+    } else if (response['error']) {
+        const error_msg = response['error'];
+        append_message(render_msg_error(error_msg));
+        throw Error(error_msg)
     }
     const response_json = await response.json();
     const conv_id = parseInt(response_json['conv_id']);
