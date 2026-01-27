@@ -26,7 +26,7 @@ pydantic_core==2.41.5
 PyJWT==2.10.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.1
-python-multipart==0.0.21
+python-multipart==0.0.22
 pytz==2025.1
 pywin32==311
 referencing==0.37.0
