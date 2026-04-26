@@ -41,7 +41,7 @@ python cookies.py --input_path $xiaohongshu_cookies_path
 
 Save the output before closing, because the output is MCP configuration information.
 
-### Maintain cookies
+### Update cookies
 
 If MCP server fails to start, extract the new cookies to file `$xiaohongshu_cookies_path`. 
 
@@ -53,33 +53,25 @@ Run the following command.
 python cookies.py --input_path $xiaohongshu_cookies_path
 ```
 
-Do the same action as [updating version](#update-version).
+
 
 ### MCP config
 
-Let the root folder of this program be `$installation_path`.
+Let the root folder of this program be `$base_dir`.
 
 MCP configuration:
 
-```
-{
-  "mcpServers": {
-    "XJtlWxIWGF4ACYt4NCjda": {
-      "name": "rednote-agent",
-      "description": "",
-      "baseUrl": "",
-      "command": "$installation_path\\mcp_windows.bat",
-      "args": [],
-      "env": {},
-      "isActive": true,
-      "type": "stdio",
-      "longRunning": true
-    }
-  }
-}
-```
+| Item    | Value                      |
+| ------- | -------------------------- |
+| Name    | rednote-agent              |
+| Type    | stdio                      |
+| Command | $base_dir/start_server.ps1 |
+
+
 
 ### Update version
 
-To update this program, turn off and on "rednote-assistant" MCP server in MCP server config.
+Update source code of this MCP server.
+
+Update cookies. Turn off and on this MCP server again.
 
