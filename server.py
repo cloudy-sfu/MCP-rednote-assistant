@@ -15,11 +15,6 @@ logging.basicConfig(
     format="[%(levelname)s] %(message)s",
     stream=sys.stdout,
 )
-logging.basicConfig(
-    level=logging.INFO,
-    format="[%(levelname)s] %(message)s",
-    stream=sys.stdout,
-)
 error_handler = logging.Logger(name="Error", level=logging.ERROR)
 error_handler.addHandler(logging.StreamHandler(sys.stderr))
 
