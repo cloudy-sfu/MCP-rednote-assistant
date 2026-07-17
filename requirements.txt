@@ -14,7 +14,7 @@ httpx-sse==0.4.3
 idna==3.10
 jsonschema==4.26.0
 jsonschema-specifications==2025.9.1
-mcp==1.25.0
+mcp==1.28.1
 numpy==2.2.4
 packaging==24.2
 pandas==2.2.3
